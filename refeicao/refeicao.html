@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <!-- Font Imports -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=PT+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <!-- Core Style -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Font Icons -->
+	<link rel="stylesheet" href="../css/font-icons.css">
+    <!-- Custom CSS -->
+	<link rel="stylesheet" href="../css/custom.css">
+   <!-- Plugins/Components CSS -->
+	<link rel="stylesheet" href="../css/components/select-boxes.css">   
+   
+
+    <title>Projeto</title>
+   
+</head>
+
+<body>
+     <!-- Cabeçalho de informações do sistema -->
+     <header>
+        <div class="bg-transparent mt-6 mb-0">
+            <div class="container">
+
+                <div class="row align-items-center col-mb-50">
+                    <div class="col-md-6 text-center">
+                        <img src="../img/20.png" height="250px" alt="Image" data-animate="fadeInLeft" class="fadeInLeft animated">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="heading-block text-center" style="padding-top: 40px;">
+                            <h2>Manter Refeição</h2>                                                        
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- Content
+    ============================================= -->
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container">                           
+                    
+                <div class="form-widget">
+                    <div class="form-result"></div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p><span class="dropcap">I</span>nforme todas as refeições que serão administradas, informando o dia da semana. No segundo passo, você poderá incluir os alimentos para cada uma delas.</p>
+                            <form class="row" action="#" method="post" enctype="multipart/form-data">
+                                <input type="hidden" id="newType" value="cadastrar">
+                                <input type="hidden" id="newid" value="">
+                                <div class="form-process">
+                                    <div class="css3-spinner">
+                                        <div class="css3-spinner-scaler"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label>Dieta:</label>
+                                    <input type="text" name="newDieta" id="newDieta" class="form-control required" value="" placeholder="Cadastre o código da sua dieta">
+                                </div>                                            
+                                <div class="col-12 form-group">
+                                    <label>Nome da refeição:</label>                                               
+                                    <select class="form-select required valid" id="newNome">
+                                        <option value="">Nome da refeição</option>
+                                        <option value="desjejum">Desjejum</option> 
+                                        <option value="colacao">Colação</option> 
+                                        <option value="pretreino">Pré treino</option> 
+                                        <option value="almoco">Almoço</option>
+                                        <option value="lanche">Lanche</option>
+                                        <option value="jantar">Jantar</option>
+                                        <option value="ceia">Ceia</option>            
+                                    </select>                                                
+                                </div>        
+                                <div class="col-12 form-group">
+                                    <label>Dia da semana:</label>
+                                    <select class="form-select required valid" id="newSemana">
+                                        <option value="">Dia da semana</option>     
+                                        <option value="Todos os dias">Todos os dias</option>     
+                                        <option value="seg, qua e sex">seg, qua e sex</option>     
+                                        <option value="ter e qui">ter e qui</option>     
+                                        <option value="seg, ter, qua, qui e sex">seg, ter, qua, qui e sex</option>  
+                                        <option value="seg">seg</option>                            
+                                        <option value="ter">ter</option>                            
+                                        <option value="qua">qua</option>                            
+                                        <option value="qui">qui</option>                            
+                                        <option value="sex">sex</option>                              
+                                        <option value="sab">sab</option>                            
+                                        <option value="dom">dom</option>                            
+                                    </select>
+                                </div>                                                                                                     
+                                <div class="col-12">
+                                    <button type="submit" name="jobs-application-submit" id="butSubmitRefeicao" class="btn btn-danger">Cadastrar</button>                                                                                                                            
+                                </div>
+                            </form>
+                        </div>                        
+                        <div class="col-lg-6 ps-lg-5">
+                            <div class="col-lg-12">
+                                <div class="card bg-light mt-4">
+                                    <div class="card-body">                                                       
+                                    </div>
+                                </div>
+                            </div>                          
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line line-sm mb-4"></div>
+                <div class="d-flex justify-content-between">                            
+                    <a href="#" id="butCancelarRefeicao" class="button button-3d m-0 tab-btn-next">voltar</a>                                                    
+                </div>  
+                
+            </div>
+        </div>
+    </section><!-- #content end -->
+    <script src="../js/jquery-3.5.1.js"></script>  
+    <script src="../js/jquery.js"></script>
+    <script src="../js/util.js"></script>  
+    <!--<script src="../js/functions.js"></script>        -->
+    <!-- Select-Boxes Plugin -->
+	<script src="../js/components/select-boxes.js"></script>
+	<script src="../js/components/selectsplitter.js"></script>
+    <script>    
+            
+            var id_dieta = 0;
+            var usuario = '';
+            var caloria = 0;
+            var proteina = 0;
+            var carboidrato = 0;
+            var gordura = 0;
+            var arrRefeicoes = []; 
+            var arrAlimentos = []; 
+            
+
+            function criarCard(){
+                document.getElementsByClassName('card-body')[0].innerHTML = '';                
+                //document.getElementById("card-body").innerHTML = '';
+                let card = '<div>'+usuario+'</div> '+                                               
+                            '<h4 class="mb-3 d-block">Macros</h4> ' +
+                            '<div class="col-12"> ' +
+                                '<div class="row"> ' +
+                                    '<div class="col-md-3">Cal.<h4 class="h4 fw-semibold">'+caloria+'</h4></div> ' +
+                                    '<div class="col-md-3">Pro.<h4 class="h4 fw-semibold">'+proteina+'</h4></div> ' +
+                                    '<div class="col-md-3">Car.<h4 class="h4 fw-semibold">'+carboidrato+'</h4></div> ' +
+                                    '<div class="col-md-3">Gor.<h4 class="h4 fw-semibold">'+gordura+'</h4></div> ' +
+                                '</div> ' +
+                            '</div> ' +                                                    
+                            '<div class="line line-sm"></div> ' +
+                            '<h4 class="mb-3 d-block">Dieta</h4> ';     
+                            if(arrRefeicoes.length>0){
+                                '<ul class="iconlist mb-0"> '; 
+                                    for(var i=0; i<arrRefeicoes.length; i++) {                                    
+                                        card = card + '<li class="h6 pb-1"><i class="bi-check-circle-fill"></i> '+arrRefeicoes[i]+'</li> ';
+                                        
+                                        if(arrAlimentos.length>0){
+                                            let cont = 1;
+                                            let refeicaoAntiga = '';
+                                            for(var j=0; j<arrAlimentos.length; j++) {    
+                                                if(arrRefeicoes[i]==arrAlimentos[j].refeicao){
+                                                    card = card + arrAlimentos[j].label + '(' + arrAlimentos[j].peso + ' g)';
+                                                    if(arrAlimentos.length>cont && refeicaoAntiga!=arrAlimentos[j].refeicao){
+                                                        card = card + ' - ';
+                                                    }
+                                                }
+                                                cont++;
+                                                refeicaoAntiga = arrAlimentos[j].refeicao;
+                                            } 
+                                        }
+                                    }  
+                                card = card + '</ul>';
+                            }
+                document.getElementsByClassName('card-body')[0].innerHTML = card;
+                document.getElementsByClassName('card-body')[1].innerHTML = card;
+                //document.getElementById("card").innerHTML = card;                
+            }
+
+       
+
+         
+        
+       
+        
+         /*
+            --------------------------------------------------------------------------------------
+            Bloco de funções feito em jQuery
+            --------------------------------------------------------------------------------------
+        */
+        jQuery(document).ready(function() { 
+
+                        
+            
+            /*
+            --------------------------------------------------------------------------------------
+            Função para carregar dados da refeicao
+            --------------------------------------------------------------------------------------
+            */
+            var id = getUrlVars()["id"];
+            if(id!=undefined){
+
+
+                id = id.replace("#","");
+                id_dieta = id;
+
+                $.ajax({
+                    type: "GET",                    
+                    url: "http://127.0.0.1:5000/dieta?id_dieta=" + id, 
+                    success: function(result){                        
+                        
+                        document.getElementById("newid").value = id;                        
+                        document.getElementById("newDieta").value = id;    
+                        document.getElementById("newDieta").disabled = true;       
+
+                        usuario = result.usuario.nome;
+                        caloria = result.caloria;
+                        proteina = result.proteina;
+                        carboidrato = result.carboidrato;
+                        gordura = result.gordura;
+                        
+                        criarCard();     
+
+
+                        $.ajax({
+                            type: "GET",                    
+                            url: "http://127.0.0.1:5000/refeicaos", 
+                            success: function(result2){                                  
+                                for(var i = 0; i<result2.refeicaos.length; i++){
+                                    if(result2.refeicaos[i].id_dieta==id){
+                                        arrRefeicoes.push(result2.refeicaos[i].nome + ' (' + result2.refeicaos[i].dia_semana + ')')
+                                    }                                
+
+                                     //preenchendo o combobox de refeição
+                                     $('#newRefeicao').append($('<option>', {
+                                        value: result2.refeicaos[i].id,
+                                        text: result2.refeicaos[i].nome + ' (' + result2.refeicaos[i].dia_semana + ')'
+                                    }));   
+                                    
+
+                                            
+                                    //apaga refeicoes que não foram concluidas
+                                    $.ajax({
+                                        type: "DELETE",                    
+                                        url: "http://127.0.0.1:5000/refeicao?id_refeicao="+ result2.refeicaos[i].id,                                         
+                                        dataType: 'text',                                        
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            // Triggered if response status code is NOT 200 (OK)                            
+                                            //alert(jqXHR.status);                             
+                                            var status = jqXHR.status;
+                                            //var msg = jqXHR.responseText;
+                                            //console.log(textStatus, errorThrown);             
+                                            switch (status) {
+                                                case 400: //Bad Request
+                                                    alert("Bad Request");                  
+                                                case 409: //conflict                  
+                                                    alert("Refeição já salva na base");                  
+                                                case 422: //Unprocessable Entity
+                                                //alert("Unprocessable Entity");                  
+                                                default: //Unknown server error occured
+                                                    throw new Error(`Unknown server error occured:`+ textStatus);
+                                            }
+                                        }
+                                    });  
+
+                                }
+                                criarCard();                                                          
+                            }
+                        });    
+                    }
+                });
+
+            }     
+            
+            /*
+            --------------------------------------------------------------------------------------
+            Função para cancelar e excluir refeições
+            --------------------------------------------------------------------------------------
+            */
+            
+            $('#butCancelarRefeicao').click(function(e) {    
+                $.ajax({
+                    type: "GET",                    
+                    url: "http://127.0.0.1:5000/refeicaos", 
+                    success: function(result2){                                  
+                        for(var i = 0; i<result2.refeicaos.length; i++){
+                                                                
+                            //apaga refeicoes que não foram concluidas
+                            $.ajax({
+                                type: "DELETE",                    
+                                url: "http://127.0.0.1:5000/refeicao?id_refeicao="+ result2.refeicaos[i].id,                                         
+                                dataType: 'text',                                        
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    // Triggered if response status code is NOT 200 (OK)                            
+                                    //alert(jqXHR.status);                             
+                                    var status = jqXHR.status;
+                                    //var msg = jqXHR.responseText;
+                                    //console.log(textStatus, errorThrown);             
+                                    switch (status) {
+                                        case 400: //Bad Request
+                                            alert("Bad Request");                  
+                                        case 409: //conflict                  
+                                            alert("Refeição já salva na base");                  
+                                        case 422: //Unprocessable Entity
+                                        //alert("Unprocessable Entity");                  
+                                        default: //Unknown server error occured
+                                            throw new Error(`Unknown server error occured:`+ textStatus);
+                                    }
+                                }
+                            }); 
+                        }                    
+                    }
+                });  
+                location.href="index.html";
+            });
+
+            $('#buCancelar').click(function(e) {    
+
+
+                $.ajax({
+                    type: "GET",                    
+                    url: "http://127.0.0.1:5000/refeicaos", 
+                    success: function(result2){                                  
+                        for(var i = 0; i<result2.refeicaos.length; i++){
+                            
+                                    
+                            //apaga refeicoes que não foram concluidas
+                            $.ajax({
+                                type: "DELETE",                    
+                                url: "http://127.0.0.1:5000/refeicao?id_refeicao="+ result2.refeicaos[i].id,                                         
+                                dataType: 'text',                                        
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    // Triggered if response status code is NOT 200 (OK)                            
+                                    //alert(jqXHR.status);                             
+                                    var status = jqXHR.status;
+                                    //var msg = jqXHR.responseText;
+                                    //console.log(textStatus, errorThrown);             
+                                    switch (status) {
+                                        case 400: //Bad Request
+                                            alert("Bad Request");                  
+                                        case 409: //conflict                  
+                                            alert("Refeição já salva na base");                  
+                                        case 422: //Unprocessable Entity
+                                        //alert("Unprocessable Entity");                  
+                                        default: //Unknown server error occured
+                                            throw new Error(`Unknown server error occured:`+ textStatus);
+                                    }
+                                }
+                            }); 
+                        }                    
+                    }
+                });  
+                location.href="index.html";
+            });
+
+            /*
+            --------------------------------------------------------------------------------------
+            Função para validar o click do tab alimentos
+            --------------------------------------------------------------------------------------
+            */
+            $("#canvas-profile-alt-tab").click(function(e) {  
+                if (arrRefeicoes.length <= 0) {
+                    // the array is defined and has at least one element
+                    alert('Você precisa cadastrar uma refeição!');    
+                    $("#canvas-home-alt-tab").click();
+                    return false;
+                }
+                else{
+                    $('#canvas-home-alt-tab').removeClass('active').addClass('inactive');
+                    $('#canvas-profile-alt-tab').removeClass('inactive').addClass('active');                    
+                    $('#home-alt').removeClass('show');
+                    $('#home-alt').removeClass('active');
+                    $('#profile-alt').addClass('show');
+                    $('#profile-alt').addClass('active');
+                    
+
+                    //canvas-tab-alt-content
+                    criarCard();
+                   
+                    
+                    $.ajax({
+                        type: "GET",                    
+                        url: "http://127.0.0.1:5000/refeicaos", 
+                        success: function(result2){                                  
+
+                            $('#newRefeicao').empty();
+                            $('#newRefeicao').append($('<option>', {
+                                value: '',
+                                text: '-- selecione a refeição --'
+                            }));  
+                            for(var i = 0; i<result2.refeicaos.length; i++){  
+
+                                //preenchendo o combobox de refeição                           
+                                $('#newRefeicao').append($('<option>', {
+                                    value: result2.refeicaos[i].id,
+                                    text: result2.refeicaos[i].nome + ' (' + result2.refeicaos[i].dia_semana + ')'
+                                }));  
+                            }                    
+                        }
+                    });      
+                }
+            });
+            
+
+            /*
+            --------------------------------------------------------------------------------------
+            Função para incluir ou atualizar um item de acordo com o click do mouse
+            --------------------------------------------------------------------------------------
+            */
+            $('#butSubmitRefeicao').click(function(e) {         
+                
+
+                
+                let inputDieta  = document.getElementById("newDieta").value;
+                let inputNome   = document.getElementById("newNome").value;
+                let inputSemana = document.getElementById("newSemana").value;                   
+                let inputTipo   = document.getElementById("newType").value;
+                
+                var msg = '';
+               
+                if (inputDieta === '') {
+                    msg += "Escreva a dieta!\n";               
+                }else{
+                    if(isNaN(inputDieta)){
+                        msg += "O dieta precisa ter o formato válido!\n";
+                    }
+                }               
+                
+                if (inputNome == "") msg += "Selecione a refeição!\n";   
+                if (inputSemana == "") msg += "Selecione o dia da semana!\n";   
+                
+            
+                if(msg!=''){
+                    alert(msg);  
+                    return false;  
+                }
+                else
+                { 
+                    if(inputTipo=='cadastrar'){
+                            
+                        /*
+                        --------------------------------------------------------------------------------------
+                        Função para incluir um item na lista do servidor via requisição POST
+                        --------------------------------------------------------------------------------------
+                        */
+                        var postForm = { //Fetch form data
+                            'dieta_id'         : inputDieta,
+                            'nome'             : inputNome,
+                            'dia_semana'       : inputSemana                                                        
+                        };                                          
+
+                        
+                        $.ajax({
+                            type: "post",
+                            url: 'http://127.0.0.1:5000/refeicao',    
+                            data: postForm,
+                            dataType: 'text',
+                        })
+                        .done( function (responseText) {
+                            // Triggered if response status code is 200 (OK)                            
+                            //alert(responseText); 
+                            alert("Refeição cadastrada!");     
+                            arrRefeicoes.push(inputNome+' (' + inputSemana + ')');
+
+
+                           
+
+                            criarCard();
+
+                        })
+                        .fail( function (jqXHR, status, error) {
+                            // Triggered if response status code is NOT 200 (OK)                            
+                            //alert(jqXHR.status);                             
+                            var status = jqXHR.status;
+                            //var msg = jqXHR.responseText;
+                            //console.log(textStatus, errorThrown);             
+                            switch (status) {
+                                case 400: //Bad Request
+                                    alert("Bad Request");                  
+                                case 409: //conflict                  
+                                    alert("Refeição já salva na base");                  
+                                case 422: //Unprocessable Entity
+                                //alert("Unprocessable Entity");                  
+                                default: //Unknown server error occured
+                                    throw new Error(`Unknown server error occured:`+ textStatus);
+                            }
+                           
+                        })
+                        .always( function() {
+                            // Always run after .done() or .fail()
+                            //$('p:first').after('<p>Thank you.</p>');
+                            //location.href="index.html"
+
+                        });                      
+                        
+                        e.preventDefault();
+                        return false;                  
+
+                    }   
+                        
+                }
+
+            });
+        });
+    </script>      
+</body>
+</html>

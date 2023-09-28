@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="../css/menu.css">
+
+    <title>Projeto</title>
+</head>
+
+<body>
+     <!-- Cabeçalho de informações do sistema -->
+    <header>
+        <div class="section bg-transparent mt-6 mb-0">
+            <div class="container">
+
+                <div class="header-row">
+                    <!-- Primary Navigation
+						============================================= -->
+						<div class="topnav" id="myTopnav">
+                            <a href="../index.html">Home</a>
+                            <a href="../usuario/index.html">Usuários</a>
+                            <a href="../dieta/index.html">Dietas</a>
+                            <a href="index.html" class="active">Refeições</a>                            
+                            <a href="../alimento/index.html">Alimentos</a>
+                            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                              <i class="fa fa-bars"></i>
+                            </a>
+                          </div><!-- #primary-menu end -->
+                </div>
+
+                <div class="row align-items-center col-mb-50">
+                    <div class="col-md-6 text-center">
+                        <img src="../img/refeicao.jpg" height="250px" alt="Image" data-animate="fadeInLeft" class="fadeInLeft animated">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="heading-block text-center" style="padding-top: 40px;">
+                            <h2>Refeições</h2>                                                        
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <section>
+    <div class="col-md-10 mx-auto" style="margin-top: 20px; margin-bottom: 30px;">
+        <div class="col">
+            <div class="row">
+                <div class="col-lg-10 mb-2 mb-lg-0"></div>
+                <div class="col-lg-2 mb-2 mb-lg-0">
+                    <!-- <button class="btn btn-lg btn-danger w-100 m-0" id="butSubmit" onclick="location.href='refeicao.html';" value="cadastrar" type="button">cadastrar</button>-->
+                </div>
+            </div>    
+        </div>
+    </div>   
+    </section>
+    <!-- Tabela com items existentes -->
+    <section>
+        <div class="col-md-10 mx-auto">
+            <table id="myTable" class="table table-striped" style="width:100%">           
+                <tr>
+                    <th>Id</th>
+                    <th>Dieta</th>
+                    <th>Dt.Dieta</th>
+                    <th>Nome</th>                    
+                    <th>Dia Semana</th>                    
+                    <!--<th>Edit</th>-->
+                    <th>Del</th>                    
+                </tr>           
+            </table>
+        </div>        
+    </section>       
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/util.js"></script>  
+    <script src="../js/jquery.dataTables.min.js"></script>    
+    <script src="../js/dataTables.bootstrap5.min.js"></script>
+    <script src="../js/menu.js"></script>    
+    <script>
+        /*
+            --------------------------------------------------------------------------------------
+            Função para deletar um item da lista do servidor via requisição DELETE
+            --------------------------------------------------------------------------------------
+        */
+            const deleteItem = (item) => {
+                console.log(item)
+                let url = 'http://127.0.0.1:5000/refeicao?id_refeicao=' + item;
+                fetch(url, {
+                method: 'delete'
+                })
+                .then((response) => response.json())
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        /*
+            --------------------------------------------------------------------------------------
+            Função para editar um item da lista de acordo com o click no botão update
+            --------------------------------------------------------------------------------------
+        */
+            $('#myTable tbody').on('click', '.linkEdit', function () {
+                var table = $('#myTable').DataTable();
+                var tr = $(this).closest('tr');
+                var data = table.row(tr).data();
+                
+                location.href='refeicao.html?id='+ data.id
+                
+            });
+        
+        /*
+            --------------------------------------------------------------------------------------
+            Bloco de funções feito em jQuery
+            --------------------------------------------------------------------------------------
+        */
+            jQuery(document).ready(function() {
+        
+                //variavel global para guardar o id do usuario que será excluido
+                var idDel = 0;  
+                
+            
+                /*
+                --------------------------------------------------------------------------------------
+                Função para excluir 
+                --------------------------------------------------------------------------------------
+                */
+                $('#myTable tbody').on('click', '.linkDelete', function () {				
+                    var table = $('#myTable').DataTable();
+                    var tr = $(this).closest('tr');
+                    var data = table.row(tr).data();
+                    idDel = data.id;   
+                    if (confirm("Você tem certeza que deseja excluir a refeição?")) {
+                        deleteItem(idDel);      
+                        alert("Refeição Removida!");            
+                        table.row( $(this).parents('tr') ).remove().draw();  
+                        idDel = 0;
+                    }
+                });
+
+                
+            
+                /*
+                ----------------------------------------------------------------------------------------------
+                Função para fazer uma requisição de usuarios por ajax via GET e preencher o objeto Datatable
+                ----------------------------------------------------------------------------------------------
+                */
+                $.ajax({
+                    type: "GET",
+                    url: 'http://127.0.0.1:5000/refeicaos',      
+                    success: function(result){
+                        $('#myTable').DataTable({       
+                            
+                            "ordering": true,
+                            "paging": true,
+                            "pagingType": "full_numbers",
+                            "pageLength": 10,
+                            "processing": true,				
+                            "aaData": result.refeicaos,
+                            "columns": [                   
+                                { "data": 'id', title: "Id" },
+                                { "data": 'id_dieta', title: "Dieta" },
+                                {
+                                    "data": "dieta",
+                                    title: "Dt. Cadastro Dieta",
+                                    render: function (data, type, row) {
+                                        if (data == null) {
+                                            return '';
+                                        } else {
+                                            var arrayDateTime = data.split(" ");
+                                            var dia = arrayDateTime[1];
+                                            var mes = mes_portugues(arrayDateTime[2]);
+                                            var ano = arrayDateTime[3];
+                                            var horario = arrayDateTime[4];                            
+                                            return dia + "/" + mes + "/" + ano + " " + horario;
+                                        }
+                                    }
+                                },
+                                { "data": 'nome', title: "Nome" },
+                                { "data": 'dia_semana', title: "Dia Semana" },                                        
+                                /*
+                                {
+                                    "data": "edit",						
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "render": function (data, type, row) {							
+                                        return '<a href="#" class="linkEdit"><img src="../img/pencil.png" width="15px" height="15px"></i></a>';                                        
+                                    }
+                                },
+                                */
+                                {
+                                    "data": "delete",						
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "render": function (data, type, row) {							
+                                        return '<a href="#" class="linkDelete"><img src="../img/excluir.png" width="15px" height="15px"></i></a>';							
+                                    }
+                                }              
+                            ]            
+                        });
+                    }
+                });
+            
+            });
+    </script>
+</body>
+</html>
